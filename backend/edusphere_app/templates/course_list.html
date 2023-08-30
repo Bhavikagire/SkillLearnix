@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Listings</title>
+</head>
+<body>
+    <h1>Available Courses</h1>
+    <ul>
+        {% for course in courses %}
+        <li>
+            <strong>{{ course.title }}</strong><br>
+            Instructor: {{ course.instructor.name }}<br>
+            Department: {{ course.department.name }}<br>
+            <a href="{% url 'course_details' course.id %}">View Details</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <!-- base.html -->
+<ul>
+    <li><a href="{% url 'student_dashboard' %}">Student Dashboard</a></li>
+    <li><a href="{% url 'instructor_dashboard' %}">Instructor Dashboard</a></li>
+    <!-- Other navigation links -->
+  </ul>
+  
+</body>
+</html>

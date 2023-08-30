@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Welcome, {{ user_profile.user.username }}!</h1>
+<h2>Your Enrolled Courses:</h2>
+<ul>
+  {% for course in enrolled_courses %}
+    <li>{{ course.title }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

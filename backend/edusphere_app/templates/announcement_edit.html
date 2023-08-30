@@ -1,0 +1,16 @@
+{% extends 'base.html' %}  <!-- Use a base template if you have one -->
+
+{% block content %}
+  <h1>Edit Announcement</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" value="{{ announcement.title }}" required>
+    <br>
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" rows="4" required>{{ announcement.content }}</textarea>
+    <br>
+    <button type="submit">Save Changes</button>
+  </form>
+{% endblock %}
