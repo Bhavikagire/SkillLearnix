@@ -1,0 +1,64 @@
+<h2>Instructor Management</h2>
+<p>This is where you can manage instructors.</p>
+
+<!-- <app-instructor></app-instructor> -->
+<h2>List of Instructors</h2>
+<ul>
+    
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            Name
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Gender
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Date of Birth
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Department
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Email
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Contact Number
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let instructor of instructors"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        >
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {{ instructor.name }}
+          </th>
+          <td class="px-6 py-4">
+            {{ instructor.gender }}
+          </td>
+          <td class="px-6 py-4">
+            {{ instructor.date_of_birth }}
+          </td>
+          <td class="px-6 py-4">
+            {{ instructor.department }}
+          </td>
+          <td class="px-6 py-4">
+            {{ instructor.email }}
+          </td>
+          <td class="px-6 py-4">
+            {{ instructor.contact_number }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <a routerLink="/instructors/create" class="btn btn-primary">Create Instructor</a>
+  
+  
+  
+</ul>
+

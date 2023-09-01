@@ -11,16 +11,25 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Instructor
 from .forms import InstructorForm
 
+# def create_instructor(request):
+#     if request.method == 'POST':
+#         form = InstructorForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('instructor_list')  # Redirect to the list view
+#     else:
+#         form = InstructorForm()
+#     return render(request, 'create_instructor.html', {'form': form})
+
 def create_instructor(request):
     if request.method == 'POST':
         form = InstructorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('instructor_list')  # Redirect to the list view
+            return JsonResponse({'message': 'Instructor created successfully'})  # Return a JSON response
     else:
         form = InstructorForm()
     return render(request, 'create_instructor.html', {'form': form})
-
 # def instructor_list(request):
 #     instructors = Instructor.objects.all()
     
@@ -292,18 +301,18 @@ def add_department(request):
 
 
 
-    department = get_object_or_404(Department, id=department_id)
+    # department = get_object_or_404(Department, id=department_id)
 
-    if request.method == 'POST':
-        form = DepartmentForm(request.POST, instance=department)
-        if form.is_valid():
-            form.save()
-            return redirect('department_management')
-    else:
-        form = DepartmentForm(instance=department)
+    # if request.method == 'POST':
+    #     form = DepartmentForm(request.POST, instance=department)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('department_management')
+    # else:
+    #     form = DepartmentForm(instance=department)
 
-    context = {'form': form, 'action': 'Edit'}
-    return render(request, 'edit_department.html', context)
+    # context = {'form': form, 'action': 'Edit'}
+    # return render(request, 'edit_department.html', context)
 
 @login_required
 def profile_update(request):
