@@ -1,5 +1,5 @@
 from django import forms
-from .models import Course, Submission, Department, Profile, Instructor
+from .models import Course, Submission, Department, Profile, Instructor, Student
 
 class EnrollmentForm(forms.Form):
     course = forms.ChoiceField(choices=[(course.id, course.title) for course in Course.objects.all()])
@@ -25,6 +25,10 @@ class CourseForm(forms.ModelForm):
         model = Course
         fields = ['title', 'department', 'instructor']
         
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = '__all__'
 
 class InstructorForm(forms.ModelForm):
     class Meta:

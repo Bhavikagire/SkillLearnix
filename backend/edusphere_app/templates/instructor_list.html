@@ -1,15 +1,32 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructor List</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/courses/">Courses</a></li>
+            <li><a href="/instructors/">Instructors</a></li>
+            <li><a href="/instructors/create/"> create new Instructors</a></li>
+            <!-- Add more menu items as needed -->
+
+        </ul>
+    </nav>
     <h1>Instructor List</h1>
     <ul>
         {% for instructor in instructors %}
-            <li>{{ instructor.name }}</li>
+            <li>
+                <strong>id:</strong> {{ instructor.id }}<br>
+                <strong>Name:</strong> {{ instructor.name }}<br>
+                <strong>Gender:</strong> {{ instructor.gender }}<br>
+                <strong>Date of Birth:</strong> {{ instructor.date_of_birth }}<br>
+                <strong>Department:</strong> {{ instructor.department }}<br>
+                <strong>Email:</strong> {{ instructor.email }}<br>
+                <strong>Contact Number:</strong> {{ instructor.contact_number }}<br>
+            </li>
         {% endfor %}
     </ul>
 </body>

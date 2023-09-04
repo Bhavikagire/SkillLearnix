@@ -10,16 +10,42 @@ from .forms import InstructorForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Instructor
 from .forms import InstructorForm
+from django.http import JsonResponse
+from .forms import StudentForm
 
-# def create_instructor(request):
+# def create_student(request):
 #     if request.method == 'POST':
-#         form = InstructorForm(request.POST)
+#         form = StudentForm(request.POST)
 #         if form.is_valid():
 #             form.save()
-#             return redirect('instructor_list')  # Redirect to the list view
+#             return redirect('student_list')  # Replace 'student_list' with the URL name for the student list view
 #     else:
-#         form = InstructorForm()
-#     return render(request, 'create_instructor.html', {'form': form})
+#         form = StudentForm()
+#     return render(request, 'create_student.html', {'form': form})
+
+from .forms import StudentForm
+
+# def create_student(request):
+#     if request.method == 'POST':
+#         form = StudentForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return JsonResponse({'message': 'Student created successfully'})
+#     else:
+#         form = StudentForm()
+#     return render(request, 'create_student.html', {'form': form})
+
+def create_student(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Student created successfully'})  # Return a JSON response
+    else:
+        form = StudentForm()
+    return render(request, 'create_student.html', {'form': form})
+
+
 
 def create_instructor(request):
     if request.method == 'POST':
@@ -30,32 +56,11 @@ def create_instructor(request):
     else:
         form = InstructorForm()
     return render(request, 'create_instructor.html', {'form': form})
-# def instructor_list(request):
-#     instructors = Instructor.objects.all()
-    
-#     return render(request, 'instructor_list.html', {'instructors': instructors})
-from django.http import JsonResponse
+
 def instructor_list(request):
     instructors = Instructor.objects.all()
-    instructor_data = [
-        {
-            'id': instructor.id,
-            'name': instructor.name,
-            'gender': instructor.gender,
-            'date_of_birth': instructor.date_of_birth.strftime('%Y-%m-%d'),
-            'department': instructor.department,
-            'email': instructor.email,
-            'contact_number': instructor.contact_number
-        }
-        for instructor in instructors
-    ]
-    
-    response_data = {
-        'status': 'success',
-        'instructors': instructor_data
-    }
-    
-    return JsonResponse(response_data, status=200)
+   
+    return render(request, 'instructor_list.html', {'instructors': instructors})
 
 def update_instructor_profile(request, instructor_id):
     instructor = get_object_or_404(Instructor, pk=instructor_id)
@@ -74,9 +79,6 @@ def delete_instructor_profile(request, instructor_id):
         instructor.delete()
         return redirect('instructor_list')
     return render(request, 'delete_instructor_profile.html', {'instructor': instructor})
-
-
-
 
 def instructor_detail(request, instructor_id):
     instructor = get_object_or_404(Instructor, id=instructor_id)
@@ -100,8 +102,23 @@ def delete_instructor(request, instructor_id):
         return redirect('instructor_list')
     return render(request, 'delete_instructor.html', {'instructor': instructor})
 
+@login_required
+def instructor_dashboard(request):
+    # Fetch relevant data for instructor dashboard
+    user_profile = Profile.objects.get(user=request.user)
+    taught_courses = user_profile.taught_courses.all()
 
+    context = {
+        'taught_courses': taught_courses,
+        'user_profile': user_profile,
+    }
 
+    return render(request, 'instructor_dashboard.html', context)
+
+def instructor_dashboard(request):
+    return render(request, 'instructor_dashboard.html')
+
+# ------------------------------------------------------- INSTRUCTOR--------------------------------------------------------------#
 
 @login_required
 def edit_course(request, course_id):
@@ -127,8 +144,25 @@ def course_list(request):
     courses = Course.objects.all()
     return render(request, 'course_list.html', {'courses': courses})
 
+def course_list(request):
+    courses = Course.objects.all()
+    return render(request, 'course_list.html', {'courses': courses})
 
 
+def enroll_course(request):
+    if request.method == 'POST':
+        student = request.user.student  # Assuming you have a Student model and authenticated user
+        course_id = request.POST.get('course_id')
+        course = Course.objects.get(id=course_id)
+        enrollment = Enrollment(student=student, course=course)
+        enrollment.save()
+        return redirect('course_list')  # Redirect to course list or any other appropriate page
+
+    # Redirect to the course list if accessed via GET
+    return redirect('course_list')
+
+
+# ------------------------------------------------------- STUDENT -------------------------------------------------------------------#
 @login_required
 def student_dashboard(request):
     # Fetch relevant data for student dashboard
@@ -143,25 +177,11 @@ def student_dashboard(request):
     return render(request, 'student_dashboard.html', context)
 
 @login_required
-def instructor_dashboard(request):
-    # Fetch relevant data for instructor dashboard
-    user_profile = Profile.objects.get(user=request.user)
-    taught_courses = user_profile.taught_courses.all()
-
-    context = {
-        'taught_courses': taught_courses,
-        'user_profile': user_profile,
-    }
-
-    return render(request, 'instructor_dashboard.html', context)
-
-@login_required
 def student_dashboard(request):
     return render(request, 'student_dashboard.html')
 
 @login_required
-def instructor_dashboard(request):
-    return render(request, 'instructor_dashboard.html')
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -188,22 +208,6 @@ def user_logout(request):
     logout(request)
     return redirect('login')  # Redirect to the login page
 
-def course_list(request):
-    courses = Course.objects.all()
-    return render(request, 'course_list.html', {'courses': courses})
-
-
-def enroll_course(request):
-    if request.method == 'POST':
-        student = request.user.student  # Assuming you have a Student model and authenticated user
-        course_id = request.POST.get('course_id')
-        course = Course.objects.get(id=course_id)
-        enrollment = Enrollment(student=student, course=course)
-        enrollment.save()
-        return redirect('course_list')  # Redirect to course list or any other appropriate page
-
-    # Redirect to the course list if accessed via GET
-    return redirect('course_list')
 
 
 def assignment_details(request, assignment_id):
