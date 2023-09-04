@@ -24,7 +24,7 @@ class Department(models.Model):
 class Instructor(models.Model):
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Other')
-    date_of_birth = models.DateField(default='2000-01-01') 
+    date_of_birth = models.DateField() 
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     email = models.EmailField()
     contact_number = models.CharField(max_length=15, default='')
@@ -48,7 +48,7 @@ class Course(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, default=2)
 
     def __str__(self):
         return self.title
@@ -76,6 +76,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     due_date = models.DateField()
+    
 
     def __str__(self):
         return self.title

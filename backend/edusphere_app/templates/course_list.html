@@ -9,9 +9,8 @@
         {% for course in courses %}
         <li>
             <strong>{{ course.title }}</strong><br>
-            Instructor: {{ course.instructor.name }}<br>
             Department: {{ course.department.name }}<br>
-            <a href="{% url 'course_details' course.id %}">View Details</a>
+         
         </li>
         {% endfor %}
     </ul>

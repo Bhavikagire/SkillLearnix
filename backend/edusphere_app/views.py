@@ -35,6 +35,18 @@ from .forms import StudentForm
 #         form = StudentForm()
 #     return render(request, 'create_student.html', {'form': form})
 
+
+def create_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Course created successfully'})  # Return a JSON response
+    else:
+        form = CourseForm()
+    return render(request, 'create_course.html', {'form': form})
+
+
 def create_student(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -164,9 +176,6 @@ def delete_course(request, course_id):
         return redirect('course_list')
     return render(request, 'delete_course.html', {'course': course})
 
-def course_list(request):
-    courses = Course.objects.all()
-    return render(request, 'course_list.html', {'courses': courses})
 
 def course_list(request):
     courses = Course.objects.all()

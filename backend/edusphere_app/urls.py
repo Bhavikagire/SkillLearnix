@@ -4,6 +4,7 @@ from . import views  # Import your app's views
 urlpatterns = [
     # Other URL patterns
     path('courses/', views.course_list, name='course_list'),
+    path('courses/create/', views.create_course, name='create_course'),
 
     path('enroll/', views.enroll_course, name='enroll_course'),
     path('assignments/<int:assignment_id>/', views.assignment_details, name='assignment_details'),
