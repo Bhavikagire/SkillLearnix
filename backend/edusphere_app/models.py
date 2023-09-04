@@ -14,12 +14,18 @@ DEPARTMENT_CHOICES = [
     ('Engineering', 'Engineering'),
     # Add other department choices
 ]
+class Department(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 class Instructor(models.Model):
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Other')
     date_of_birth = models.DateField(default='2000-01-01') 
-    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     email = models.EmailField()
     contact_number = models.CharField(max_length=15, default='')
 
@@ -35,12 +41,6 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
     
-class Department(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 
 

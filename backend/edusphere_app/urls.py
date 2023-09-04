@@ -27,7 +27,13 @@ urlpatterns = [
     path('courses/<int:course_id>/delete/', views.delete_course, name='delete_course'),
     # path('courses/', views.course_list, name='course_list'),
 
+    path('students/', views.student_list, name='student_list'),
     path('students/create/', views.create_student, name='create_student'),
+    path('students/<int:student_id>/update/', views.update_student_profile, name='update_student_profile'),
+    path('students/<int:student_id>/delete/', views.delete_student_profile, name='delete_student_profile'),
+
+
+
     path('instructor/dashboard/', views.instructor_dashboard, name='instructor_dashboard'),
     path('instructors/', views.instructor_list, name='instructor_list'),
     path('instructors/<int:instructor_id>/', views.instructor_detail, name='instructor_detail'),
