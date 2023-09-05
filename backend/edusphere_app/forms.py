@@ -1,8 +1,14 @@
 from django import forms
-from .models import Course, Submission, Department, Profile, Instructor, Student
+from .models import Course, Submission, Department, Profile, Instructor, Student, Enrollment
 
-# class EnrollmentForm(forms.Form):
-#     course = forms.ChoiceField(choices=[(course.id, course.title) for course in Course.objects.all()])
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ['student', 'course', 'enrollment_date']
+
+    widgets = {
+        'enrollment_date': forms.DateInput(attrs={'type': 'date'}),
+    }
 
 class SubmissionForm(forms.ModelForm):
     class Meta:

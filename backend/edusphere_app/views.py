@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Course, Student, Enrollment, Assignment, Submission,Instructor, Department,Announcement,Profile
-from .forms import DepartmentForm
+from .forms import DepartmentForm, EnrollmentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
@@ -12,6 +12,47 @@ from .models import Instructor
 from .forms import InstructorForm
 from django.http import JsonResponse
 from .forms import StudentForm
+from datetime import date
+# def enroll_student(request):
+#     if request.method == 'POST':
+#         form = EnrollmentForm(request.POST)
+#         if form.is_valid():
+#             form.save()  # Save the enrollment
+#             return render(request, 'confirmation.html')   # Redirect to a success page
+#     else:
+#         form = EnrollmentForm()
+
+#     return render(request, 'enroll_student.html', {'form': form})
+
+
+def enroll_student(request):
+    if request.method == 'POST':
+        form = EnrollmentForm(request.POST)
+        if form.is_valid():
+            # Process form data and save the enrollment
+            student = form.cleaned_data['student']
+            course = form.cleaned_data['course']
+            enrollment_date = date.today()
+            enrollment = Enrollment(student=student, course=course, enrollment_date=enrollment_date)
+            enrollment.save()
+
+            # Redirect the user to the confirmation page
+            return redirect('confirmation_page', student_id=student.id)
+        
+    else:
+        form = EnrollmentForm()
+
+    return render(request, 'enroll_student.html', {'form': form})
+
+def confirmation_page(request, student_id):
+    student = Student.objects.get(pk=student_id)
+    student_enrollments = Enrollment.objects.filter(student=student)
+
+    return render(request, 'confirmation.html', {'student_name': student.name, 'student_enrollments': student_enrollments})
+
+# def confirmation_page(request):
+#     return render(request, 'confirmation.html')  
+
 
 # def create_student(request):
 #     if request.method == 'POST':

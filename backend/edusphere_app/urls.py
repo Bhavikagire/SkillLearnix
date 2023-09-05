@@ -6,7 +6,11 @@ urlpatterns = [
     path('courses/', views.course_list, name='course_list'),
     path('courses/create/', views.create_course, name='create_course'),
 
-    path('enroll/', views.enroll_course, name='enroll_course'),
+    path('enroll/', views.enroll_student, name='enroll_course'),
+    # path('confirmation/', views.confirmation_page, name='confirmation_page'),
+    path('confirmation/<int:student_id>/', views.confirmation_page, name='confirmation_page'),
+
+
     path('assignments/<int:assignment_id>/', views.assignment_details, name='assignment_details'),
     path('assignments/<int:assignment_id>/submit/', views.submit_assignment, name='submit_assignment'),
 

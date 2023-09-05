@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enrollment Confirmation</title>
+</head>
+<body>
+    <h1>Enrollment Confirmation</h1>
+
+    <p>Dear {{ student_name }},</p>
+
+    <p>You have successfully enrolled in the following course:</p>
+
+    <ul>
+        {% for enrollment in student_enrollments %}
+            <li>{{ enrollment.course.title }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>Thank you for choosing our platform!</p>
+</body>
+</html>
