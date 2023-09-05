@@ -9,21 +9,37 @@ from .forms import ProfileUpdateForm,CourseForm
 from .forms import InstructorForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Instructor
-from .forms import InstructorForm
+from .forms import InstructorForm, AssignmentUpdateForm
 from django.http import JsonResponse
-from .forms import StudentForm
+from .forms import StudentForm, AssignmentForm
 from datetime import date
-# def enroll_student(request):
-#     if request.method == 'POST':
-#         form = EnrollmentForm(request.POST)
-#         if form.is_valid():
-#             form.save()  # Save the enrollment
-#             return render(request, 'confirmation.html')   # Redirect to a success page
-#     else:
-#         form = EnrollmentForm()
+from .forms import StudentForm
+from django.contrib import messages
 
-#     return render(request, 'enroll_student.html', {'form': form})
+def update_assignment(request, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id)
 
+    if request.method == 'POST':
+        form = AssignmentUpdateForm(request.POST, instance=assignment)
+        if form.is_valid():
+            form.save()
+            return redirect('assignment_details', assignment_id=assignment.id)
+    else:
+        form = AssignmentUpdateForm(instance=assignment)
+
+    return render(request, 'update_assignment.html', {'form': form, 'assignment': assignment})
+
+
+def delete_assignment(request, assignment_id):
+    assignment = Assignment.objects.get(pk=assignment_id)
+
+    if request.method == 'POST':
+        # If the user confirms the deletion, delete the assignment
+        assignment.delete()
+        messages.success(request, 'Assignment deleted successfully.')
+        return redirect('assignment_list')
+
+    return render(request, 'delete_assignment.html', {'assignment': assignment})
 
 def enroll_student(request):
     if request.method == 'POST':
@@ -50,33 +66,6 @@ def confirmation_page(request, student_id):
 
     return render(request, 'confirmation.html', {'student_name': student.name, 'student_enrollments': student_enrollments})
 
-# def confirmation_page(request):
-#     return render(request, 'confirmation.html')  
-
-
-# def create_student(request):
-#     if request.method == 'POST':
-#         form = StudentForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('student_list')  # Replace 'student_list' with the URL name for the student list view
-#     else:
-#         form = StudentForm()
-#     return render(request, 'create_student.html', {'form': form})
-
-from .forms import StudentForm
-
-# def create_student(request):
-#     if request.method == 'POST':
-#         form = StudentForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return JsonResponse({'message': 'Student created successfully'})
-#     else:
-#         form = StudentForm()
-#     return render(request, 'create_student.html', {'form': form})
-
-
 def create_course(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
@@ -86,7 +75,6 @@ def create_course(request):
     else:
         form = CourseForm()
     return render(request, 'create_course.html', {'form': form})
-
 
 def create_student(request):
     if request.method == 'POST':
@@ -102,8 +90,6 @@ def student_list(request):
     students = Student.objects.all()
    
     return render(request, 'student_list.html', {'students': students})
-
-
 
 def update_student_profile(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
@@ -283,11 +269,33 @@ def user_logout(request):
     return redirect('login')  # Redirect to the login page
 
 
+def create_assignment(request, course_id):
+    course = Course.objects.get(pk=course_id)  # Retrieve the course
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            # Assign the course to the assignment before saving
+            assignment = form.save(commit=False)
+            assignment.course = course
+            assignment.save()
+            return redirect('assignment_list', course_id=course_id)
+    else:
+        form = AssignmentForm()
+
+    return render(request, 'create_assignment.html', {'form': form, 'course': course})
+
+
+def assignment_list(request):
+    assignments = Assignment.objects.all()
+    return render(request, 'assignment_list.html', {'assignments': assignments})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Assignment
 
 def assignment_details(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     context = {'assignment': assignment}
-    return render(request, 'myapp/assignment_details.html', context)
+    return render(request, 'assignment_details.html', context)
 
 
 def submit_assignment(request, assignment_id):

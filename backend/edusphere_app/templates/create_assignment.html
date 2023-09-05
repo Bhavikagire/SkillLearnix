@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Assignment</title>
+</head>
+<body>
+    <h1>Create Assignment</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Create Assignment</button>
+    </form>
+
+    <a href="{% url 'assignment_list' %}">Back to Assignment List</a>
+</body>
+</html>

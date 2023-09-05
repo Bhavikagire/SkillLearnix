@@ -5,14 +5,24 @@ urlpatterns = [
     # Other URL patterns
     path('courses/', views.course_list, name='course_list'),
     path('courses/create/', views.create_course, name='create_course'),
-
+   
     path('enroll/', views.enroll_student, name='enroll_course'),
     # path('confirmation/', views.confirmation_page, name='confirmation_page'),
     path('confirmation/<int:student_id>/', views.confirmation_page, name='confirmation_page'),
 
+   
+    path('assignments/', views.assignment_list, name='assignment_list'),
+    path('assignments/create/<int:course_id>/', views.create_assignment, name='create_assignment'),
+   
 
+
+    path('assignments/<int:assignment_id>/delete/', views.delete_assignment, name='delete_assignment'),
     path('assignments/<int:assignment_id>/', views.assignment_details, name='assignment_details'),
     path('assignments/<int:assignment_id>/submit/', views.submit_assignment, name='submit_assignment'),
+ 
+    path('assignments/<int:assignment_id>/update/', views.update_assignment, name='update_assignment'),
+
+
 
     path('department-management/', views.department_management, name='department_management'),
     path('departments/edit/<int:department_id>/', views.edit_department, name='edit_department'),
